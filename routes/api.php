@@ -2,34 +2,61 @@
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ScholarshipController;
+use App\Http\Controllers\ApplicationController;
+// FIX: Import the missing controllers for reference data used in validation
+use App\Http\Controllers\CourseController;
+use App\Http\Controllers\YearLevelController;
+use App\Http\Controllers\SectionController;
 
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
-
+// Authentication
 Route::post('/register', [AuthenticationController::class, 'register']);
 Route::post('/login', [AuthenticationController::class, 'login']);
 
-Route::middleware('auth:sanctum')->group(function(){
-    Route::get('/get-users', [UserController::class, 'getUsers']);
-    Route::post('/add-user', [UserController::class, 'addUser']);
-    Route::put('/edit-user/{id}', [UserController::class, 'editUser']);
-    Route::delete('/delete-user/{id}', [UserController::class, 'deleteUser']);
+Route::middleware('auth:sanctum')->group(function () {
 
-    Route::get('/get-students', [StudentController::class, 'getStudents']);
-    Route::post('/add-student', [StudentController::class, 'addStudent']);
-    Route::put('/edit-student/{id}', [StudentController::class, 'editStudent']);
-    Route::delete('/delete-student/{id}', [StudentController::class, 'deleteStudent']);
-    
     Route::post('/logout', [AuthenticationController::class, 'logout']);
+
+    // USER MANAGEMENT
+    Route::get('/users', [UserController::class, 'index']);
+    Route::post('/users', [UserController::class, 'store']);
+    Route::get('/users/{id}', [UserController::class, 'show']);
+    Route::put('/users/{id}', [UserController::class, 'update']);
+    Route::delete('/users/{id}', [UserController::class, 'destroy']);
+
+    // STUDENT MANAGEMENT
+    Route::get('/students', [StudentController::class, 'index']);
+    Route::post('/students', [StudentController::class, 'store']);
+    Route::get('/students/{id}', [StudentController::class, 'show']);
+    Route::put('/students/{id}', [StudentController::class, 'update']);
+    Route::delete('/students/{id}', [StudentController::class, 'destroy']);
+
+    // SCHOLARSHIP MANAGEMENT
+    Route::get('/scholarships', [ScholarshipController::class, 'index']);
+    Route::post('/scholarships', [ScholarshipController::class, 'store']);
+    Route::get('/scholarships/{id}', [ScholarshipController::class, 'show']);
+    Route::put('/scholarships/{id}', [ScholarshipController::class, 'update']);
+    Route::delete('/scholarships/{id}', [ScholarshipController::class, 'destroy']);
+
+    // APPLICATION MANAGEMENT
+    Route::get('/applications', [ApplicationController::class, 'index']);
+    Route::post('/applications', [ApplicationController::class, 'store']);
+    Route::get('/applications/{id}', [ApplicationController::class, 'show']);
+    Route::put('/applications/{id}', [ApplicationController::class, 'update']);
+    Route::delete('/applications/{id}', [ApplicationController::class, 'destroy']);
+    Route::post('/applications/{id}/upload', [ApplicationController::class, 'uploadDocument']);
+
+    // APPLICATION REVIEW (ADMIN)
+    Route::post('/applications/{id}/verify', [ApplicationController::class, 'verify']);
+    Route::post('/applications/{id}/approve', [ApplicationController::class, 'approve']);
+    Route::post('/applications/{id}/reject', [ApplicationController::class, 'reject']);
+
+    Route::apiResource('/courses', CourseController::class);
+    Route::apiResource('/year-levels', YearLevelController::class);
+    Route::apiResource('/sections', SectionController::class);
+
 });

@@ -9,17 +9,33 @@ class Student extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['first_name', 'middle_name', 'last_name', 'id_number', 'course_id', 'year_level_id', 'section_id'];
+    protected $fillable = [
+        'first_name',
+        'middle_name',
+        'last_name',
+        'id_number',
+        'course_id',
+        'year_level_id',
+        'section_id',
+    ];
 
-    public function course(){
+    public function course()
+    {
         return $this->belongsTo(Course::class);
     }
 
-    public function yearLevel(){
+    public function yearLevel()
+    {
         return $this->belongsTo(YearLevel::class);
     }
 
-    public function section(){
+    public function section()
+    {
         return $this->belongsTo(Section::class);
+    }
+
+    public function applications()
+    {
+        return $this->hasMany(Application::class);
     }
 }
